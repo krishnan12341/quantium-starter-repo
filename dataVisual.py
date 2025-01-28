@@ -2,7 +2,7 @@ import dash
 from dash import dcc, html
 from dash.dependencies import Input, Output
 import pandas as pd
-import plotly.express as plotly
+import plotly.express as p
 
 formattedData = './outputFiles/formatted_sales_output_file.csv'
 df = pd.read_csv(formattedData)
@@ -95,7 +95,7 @@ def update_chart(selected_region):
     else:
         filter = pinkMorsel[pinkMorsel['Region'] == selected_region]
 
-    image = plotly.line(
+    image = p.line(
         filter,
         x = 'Date',
         y = 'Sales',
@@ -112,6 +112,6 @@ def update_chart(selected_region):
     )
     return image
 
-# Run the app
+# Runs the app
 if __name__ == '__main__':
     app.run_server(debug=True)
