@@ -42,10 +42,34 @@ app.layout = html.Div(
             "Pink Morsel Sales",
             style = {'textAlign': 'center', 'fontSize': '28px'}
         ),
+        html.Div(
+            style = {'marginBottom': '20px', 'textAlign': 'center'},
+            children =[
+                html.Label(
+                    "Filter by Region:",
+                    style = {'fontSize': '18px', 'color': '#FFFFFF', 
+                    'marginRight': '10px'
+                    }
+                ),
+                dcc.RadioItems(
+                    id = 'region-filter',
+                    options = [
+                        {'label': 'North', 'value': 'north'},
+                        {'label': 'East', 'value': 'east'},
+                        {'label': 'South', 'value': 'south'},
+                        {'label': 'West', 'value': 'west'},
+                        {'label': 'All', 'value': 'all'}
+                    ],
+                    value = 'all',
+                    labelStyle = {'display': 'inline-block', 'marginRight': '10px', 
+                    'color': '#FFFFFF'},
+                    style = {'fontSize': '16px'}
+                )
+            ]
+        ),
         dcc.Graph(
             id = 'sales-line-chart',
-
-            style = {'width': '80%', 'margin': 'auto'}
+            style = {'width': '80%', 'margin': 'auto', 'backgroundColor': '#FFFFFF', 'padding': '10px', 'borderRadius': '10px'}
         ),
         html.Label(
             "Comparison Date: January 15, 2021",
@@ -62,12 +86,17 @@ app.layout = html.Div(
 
 @app.callback(
     Output('sales-line-chart', 'figure'),
-    Input('sales-line-chart', 'id')
+    Input('region-filter', 'value')
 )
 
-def update_chart(_):
+def update_chart(selected_region):
+    if selected_region == 'all':
+        filter = pinkMorsel
+    else:
+        filter = pinkMorsel[pinkMorsel['Region'] == selected_region]
+
     image = plotly.line(
-        pinkMorsel,
+        filter,
         x = 'Date',
         y = 'Sales',
         color = 'Region',
